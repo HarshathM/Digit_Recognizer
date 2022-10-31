@@ -1,0 +1,20 @@
+.entire{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:90%;
+    background: #f7f7f7;
+}
+.card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.mat-card{
+    /* background-color: aliceblue; */
+    box-shadow: 50px;
+    font-family: 'Times New Roman', Times, serif;
+}
+::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+    stroke: white ;
+}

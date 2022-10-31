@@ -1,0 +1,23 @@
+<div class="middle" *ngIf="!(load_graph && load_table)">
+    <mat-progress-spinner mode="indeterminate"  diameter="60" strokeWidth="7" ></mat-progress-spinner>
+</div>
+<canvasjs-chart class="chart" *ngIf="load_graph" [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart> 
+<div class="metrics-table" *ngIf="load_table">
+    <h2>Metrics of the Algorithm</h2>
+    <table mat-table [dataSource]="keys" class="mat-elevation-z8">
+        <ng-container matColumnDef="Metrics">
+            <th mat-header-cell *matHeaderCellDef>Metrics</th>
+            <td mat-cell *matCellDef="let element"> {{element}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Values">
+            <th mat-header-cell *matHeaderCellDef>Values </th>
+            <td mat-cell *matCellDef="let element"> <b>{{metrics[element]}}</b> </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>    
+    <div  class="download">
+        <button mat-raised-button (click)="download_csv()" color="primary"> Download Prediction(as csv)</button>
+        <button mat-raised-button (click)="download_metrics()" color="primary"> Download Metrics(as json)</button>
+    </div>
+</div>
