@@ -1,6 +1,7 @@
 .entire{
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
     align-items: center;
     height:90%;
     background: #f7f7f7;
@@ -11,7 +12,6 @@
     justify-content: center;
 }
 .mat-card{
-    /* background-color: aliceblue; */
     box-shadow: 50px;
     font-family: 'Times New Roman', Times, serif;
 }

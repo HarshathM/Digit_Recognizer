@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
 
 // Done by Harshath.M
 
@@ -12,16 +13,19 @@ import { Router } from '@angular/router';
 })
 export class UploadComponent implements OnInit {
 
+  all_formats=['png', 'jpg', 'jpeg']
   file :any;
   fname ='';
   fformat='';
   formdata:any;
-  periodicity= "6";
   showbutton = true;
+  enable_preview =false;
+  preview : any;
 
   constructor(private snackbar:MatSnackBar,
               private http:HttpClient,
-              private route:Router) { }
+              private route:Router,
+              private domsanitizer:DomSanitizer) { }
 
   ngOnInit(): void {
   }
@@ -31,32 +35,44 @@ export class UploadComponent implements OnInit {
       this.file = event.target.files[0];
       if(this.file){
         this.fname = this.file.name;
-        this.fformat = this.file.type;
-        if(this.fformat=='text/csv'){
+        this.fformat = this.file.type.split('/')[1];
+        if(this.all_formats.indexOf(this.fformat)!=-1){
           this.formdata= new FormData();
-          this.formdata.append('dataset', this.file);
+          this.formdata.append('image', this.file);
+          this.formdata.append("format", this.fformat);
+
+          let api_url = "http://127.0.0.1:5000/api/upload";
+          this.http.post(api_url,this.formdata,{responseType:'blob'}).subscribe({
+            next:((res:any)=>{
+              let objecturl = URL.createObjectURL(res);
+              this.preview = this.domsanitizer.bypassSecurityTrustUrl(objecturl);
+            }),
+            error:(()=>{
+              this.snackbar.open("Oops! Server is not available 😟","Close", {duration:4000});
+            }),
+            complete:(()=> this.enable_preview=true)
+          });
         }
         else{
-          this.snackbar.open("Please select a CSV file","Got it" ,{duration :3000});
-          this.deletefile();
+          this.snackbar.open("Please select a jpg/jpeg/png file","Got it" ,{duration :3000});
+          this.fname='';
+          this.fformat='';
+          this.file=null;
         }
-      }
-      console.log(this);    
+      }  
     }
     catch(err){
       console.log(err);
     }
   }
-  add_period(){
-    this.formdata.delete("period");
-    this.formdata.append('period', this.periodicity);
-  }
+
   deletefile(){
     this.fname='';
     this.fformat='';
     this.file=null;
-    this.formdata.delete("dataset");
-    console.log(this);
+    this.formdata.delete("image");
+    this.formdata.delete("format")
+    this.enable_preview=false;
   }
 
 // .subscribe(next?: ((value: string) => void) | null | undefined, 
@@ -66,26 +82,10 @@ export class UploadComponent implements OnInit {
   predict(){
       if(this.file){
         this.showbutton=false;
-        this.add_period();
-        let api_url = "http://127.0.0.1:5000/api/predict";
-        this.http.post(api_url,this.formdata).subscribe({
-          next:((res:any)=>{
-            if(res.statuscode == 200){
-              this.snackbar.open("Eagar to see the prediction 😎","Go on",{duration:2500});  
-              this.route.navigate(['result']);
-            }
-            else{
-              this.snackbar.open(res.statusmessage,"Choose correct dataset",{duration:3000});
-              this.showbutton= true;
-            }
-          }),
-          error:(()=>{
-            this.showbutton=true;
-            this.snackbar.open("Oops! Server is not available 😟","Close", {duration:4000});
-          })
-        });
+        this.route.navigate(['result']);
       }
       else{
+        this.showbutton=true;
         this.snackbar.open("Please select a file 🙄","Okay",{duration:3000});
       }
   }
