@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
-import { CanvasJS } from 'src/assets/canvasjs.angular.component';
+
 
 // Done by Harshath.M
 
@@ -13,91 +13,54 @@ import { CanvasJS } from 'src/assets/canvasjs.angular.component';
 export class ResultComponent implements OnInit {
 
   constructor(private http:HttpClient) { }
-  csv_data:any;
-  metrics:any;
 	chartOptions:any;
-  keys:any;
+  pred_value = 0 ;
 	load_graph = false;
-  load_table = false;
-  displayedColumns=["Metrics", "Values"];
   api_url = "http://127.0.0.1:5000/api/";
 
   ngOnInit(): void {
-		this.http.get(this.api_url+"get_csv",{responseType:"text"}).subscribe((res)=>{
-			this.csv_data = res;
+		this.http.get(this.api_url+"predict").subscribe((res:any)=>{
+      this.pred_value = res.value;
 			this.open_page();
 			this.load_graph = true;
 		});
-    this.http.get(this.api_url+"metrics").subscribe({
-      next:((res:any)=>{
-        this.metrics=res;
-        this.keys = Object.keys(res);
-        this.load_table = true;
-      })
-    });
-
   }
-  getDataPointsFromCSV(csv:any, col:number) {                       //https://canvasjs.com/docs/charts/how-to/create-charts-from-csv/
-    let dataPoints =[];
-		let csvLines = [];
-		let points = [];
-    let date = [];
-    csvLines = csv.split(/[\r?\n|\r|\n]+/);       
-    for (var i = 0; i < csvLines.length; i++)
-        if (csvLines[i].length > 0) {
-            points = csvLines[i].split(",");
-            date = points[0].split("-");
-            dataPoints.push({ 
-              x: new Date(date[0],date[1]-1),           //month starts from 0 . so only there is -1
-              y: parseInt(points[col]) 		
-				});
-		}
+  getDataPoints() { 
+    let dataPoints =[];       
+    for (var i = 0; i <= 9 ; i++)
+      dataPoints.push({ 
+        x: i,          
+        y: 0		
+      });
+    dataPoints[this.pred_value]= { x : this.pred_value ,y:100, indexLabel: "Highest\u2705"};
+    console.log(dataPoints);
 		return dataPoints;
 	}
 	
 	open_page(){
-		this.chartOptions = {                              //https://canvasjs.com/angular-charts/multi-series-chart/
+		this.chartOptions = {                              //https://canvasjs.com/angular-charts/chart-index-data-label/
       animationEnabled: true,
-			zoomEnabled: true,
 			exportEnabled: true,
 			theme: "light2",
 			title: {
-				text: "Predicted Graph"
+				text: "Recognized Result"
 			},
-      axisX: {                                          //https://canvasjs.com/docs/charts/methods/canvasjs/format-date/
-        labelFormatter: function (e:any) {
-          return CanvasJS.formatDate( e.value, "MMM YY"); 
-        },
-        labelAngle: -20
+      axisX: {     
+        title: "Digits"
       }, 
       axisY:{
-        title: "Sales"
-      },
+        title: "Prediction value (%)"
+      }, 
 			data: [{
-				type: "line",
-        color:"orange",
-        showInLegend: true,
-		    name: "Actual Sales",
-		    dataPoints: this.getDataPointsFromCSV(this.csv_data, 1)
-			},{
-        type: "line",
-        color:"blue",
-        showInLegend: true,
-        name: "Predicted Sales",
-        dataPoints: this.getDataPointsFromCSV(this.csv_data, 2)
-      }]
+				type: "column",
+		    dataPoints: this.getDataPoints()
+			}]
 		}
 	}
 
   download_csv(){
     this.http.get(this.api_url+"get_csv",{responseType:"blob"}).subscribe((res)=>{
 			saveAs(res,"Predicted.csv");
-		});
-  }
-
-  download_metrics(){
-    this.http.get(this.api_url+"metrics",{responseType:"blob"}).subscribe((res)=>{
-			saveAs(res,"Metrics.json");
 		});
   }
 

@@ -15,6 +15,3 @@
     box-shadow: 50px;
     font-family: 'Times New Roman', Times, serif;
 }
-::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
-    stroke: white ;
-}

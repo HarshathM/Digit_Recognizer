@@ -18,7 +18,6 @@ export class UploadComponent implements OnInit {
   fname ='';
   fformat='';
   formdata:any;
-  showbutton = true;
   enable_preview =false;
   preview : any;
 
@@ -81,11 +80,9 @@ export class UploadComponent implements OnInit {
 
   predict(){
       if(this.file){
-        this.showbutton=false;
         this.route.navigate(['result']);
       }
       else{
-        this.showbutton=true;
         this.snackbar.open("Please select a file 🙄","Okay",{duration:3000});
       }
   }
