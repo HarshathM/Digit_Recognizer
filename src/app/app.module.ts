@@ -17,10 +17,12 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatDialogModule} from '@angular/material/dialog';
 
 import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
+import { AboutDialog } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login/login.component';
 import { UploadComponent } from './upload/upload.component';
@@ -34,7 +36,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     UploadComponent,
     ResultComponent,
     PageNotFoundComponent,
-    CanvasJSChart
+    CanvasJSChart,
+    AboutDialog
   ],
   imports: [
     BrowserModule,
@@ -54,6 +57,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     MatTooltipModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]
