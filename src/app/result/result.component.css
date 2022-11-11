@@ -12,16 +12,19 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 50px 0; 
+    margin: 50px 0;
 }
 table{
     min-width: 350px;
     margin-bottom: 20px;
 }
-.download{
-    display: flex;
-    flex-direction: column;
+.description{
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  align-items: center;
 }
-button{
-    margin-bottom: 20px;
+.description h2{
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bold;
 }

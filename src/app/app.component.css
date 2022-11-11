@@ -1,8 +1,13 @@
 .abt-btn{
-    background:#fff; 
+    background:#fff;
     color: #3f51b5;
 }
 .toolbar{
     display: flex;
     justify-content: space-around;
 }
+.footer {
+  display: flex;
+  justify-content: space-around;
+}
+
