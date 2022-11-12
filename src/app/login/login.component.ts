@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
   }
   emailFC = new FormControl('',[Validators.email,Validators.required]);
   passwordFC = new FormControl('',[Validators.required]);
+  
   val_credentials(email:string,pwd:string){
     let formdata = new FormData();
     formdata.append("email",email);
@@ -48,15 +49,5 @@ export class LoginComponent implements OnInit {
         this.snackbar.open("Oops! Server is not available 😟","Close", {duration:4000});
       })
     });
-
-    // if(email==this.o_email && password == this.o_password){
-      
-    // }
-    // else{
-    //   this.invalid = false;
-    //   setTimeout(() => {
-    //     this.invalid = true;
-    //   }, 5000);
-    // }
   }
 }
