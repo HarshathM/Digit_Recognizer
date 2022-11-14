@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
     this.http.post(api_url+"verify",formdata).subscribe({
       next:((res:any)=>{
         if(res.statusmessage=='true'){
+          this.snackbar.open("Email and Password is verified😎","Welcome", {duration:2000});
           this.route.navigate(['/upload']);
         }
         else if(res.statusmessage=="false"){

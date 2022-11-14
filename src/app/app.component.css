@@ -5,11 +5,16 @@
 .toolbar{
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap;
+
 }
 .footer {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
+  height: auto;
 }
 .toolbar span{
   display: flex;
+  
 }
